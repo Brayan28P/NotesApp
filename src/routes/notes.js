@@ -30,8 +30,19 @@ router.post('/notes/new-note',async(req, res)=>{
 });
 
 router.get('/notes', async (req, res) =>{
-    const notes = await Note.find();
-    res.render('notes/all-notes',{ notes });
+    await Note.find()
+    .then(documentos =>{
+        const contexto={
+            notes:documentos.map(documento => {
+                return{
+                    title: documento.title,
+                    description: documento.description
+                }
+            })
+        }
+        res.render('notes/all-notes',{ notes:contexto.notes });
+    });
+    
 });
 
 module.exports = router;
