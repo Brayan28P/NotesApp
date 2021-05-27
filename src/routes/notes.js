@@ -30,7 +30,7 @@ router.post('/notes/new-note',async(req, res)=>{
 });
 
 router.get('/notes', async (req, res) =>{
-    await Note.find()
+    await Note.find().sort({date:'desc'})
     .then(documentos =>{
         const contexto={
             notes:documentos.map(documento => {
@@ -41,6 +41,25 @@ router.get('/notes', async (req, res) =>{
             })
         }
         res.render('notes/all-notes',{ notes:contexto.notes });
+    });
+
+    router.get('/notes/edit/:id',async(req,res) =>{
+     await Note.findById(req.params.id)
+        .then(documentos=>{
+            const contexto={
+                notes: documentos.map(documento =>{
+                    return{
+                        title: documento.title,
+                        description: documento.description
+                    }
+                })
+                
+            }
+        
+            res.render('/notes/edit-notes',{notes:contexto.notes});
+        });
+        
+
     });
     
 });
